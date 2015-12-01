@@ -1,6 +1,11 @@
 #!/bin/env ruby
 
 require 'yaml'
+require 'mkmf'
+
+module MakeMakefile::Logging
+  @logfile = File::NULL
+end
 
 def create_storage_file()
         fname = ENV['HOME']+'/.holdthis'
@@ -21,24 +26,46 @@ def lookup_bookmark(name)
         return storage[name]
 end
 
-def store_path_bookmark(name, path)
+def store_bookmark(name, path)
         storage = load_data()
         storage[name] = { 'type' => 'bookmark', 'path' => path }
 
         File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
 end
 
-def store_command_bookmark(name, command)
-        storage = load_data()
-        storage[name] = { :type => 'command', :path => command }
+def quote_path(path)
 
-        File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
+        if (path.include?("'"))
+                path["'"] = "'\''"
+        end
+        return "'" + path + "'"
 end
 
 def open_bookmark(name)
         storage = load_data()
 
-        puts storage[name]['path'].join(' ')
+        path_array = storage[name]['path']
+
+        executable = find_executable(path_array[0])
+        path = path_array.join(' ')
+
+        if (executable != nil)
+                puts path
+                puts "<enter> to run this, e to edit it,  or <ctrl+c> to cancel."
+                option = gets.chomp()
+                if (option == "e")
+                        exec(ENV['EDITOR'] + " " + quote_path(path))
+                end
+                exec(path)
+
+        elsif (File.file?(path))
+                puts "Opening " + path
+                exec("xdg-open " + quote_path(path))
+
+        elsif (File.directory?(path))
+                puts ("Going to " + path)
+                exec('cd ' + quote_path(path))
+        end
 end
 
 def main()
@@ -56,14 +83,7 @@ def main()
                 bookmark_name = ARGV.shift()
                 bookmark_value = ARGV[0..-1]
                 bookmark_type = 'bookmark'
-                store_path_bookmark(bookmark_name, bookmark_value)
-
-        elsif ['-c', '--command'].include?(first_arg)
-                create = true
-                bookmark_name = first_arg
-                bookmark_value = ARGV[0..-1]
-                bookmark_type = 'command'
-                store_command_bookmark(bookmark_name, bookmark_value)
+                store_bookmark(bookmark_name, bookmark_value)
 
         elsif ['-l', '--list'].include?(first_arg)
                 storage = load_data()
