@@ -7,37 +7,33 @@ module MakeMakefile::Logging
   @logfile = File::NULL
 end
 
-def create_storage_file()
+def save_data(data)
         fname = ENV['HOME']+'/.holdthis'
 
-        if (not File.file?(fname))
-                store = File.open(fname, 'w') { |f| YAML.dump({}, f) }
-        end
-
+        File.open(fname, 'w') { |f| YAML.dump(data, f) }
 end
 
 def load_data()
-        create_storage_file()
-        return YAML.load_file(ENV['HOME']+'/.holdthis') || {}
-end
-
-def lookup_bookmark(name)
-        bookmarks = load_data()
-        return storage[name]
+        fname = ENV['HOME']+'/.holdthis'
+        if (not File.file?(fname))
+                save_data({})
+                return {}
+        end
+        return YAML.load_file(fname) || {}
 end
 
 def store_bookmark(name, path)
         storage = load_data()
         storage[name] = { 'type' => 'bookmark', 'path' => path }
 
-        File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
+        save_data(storage)
 end
 
 def delete_bookmark(name)
         storage = load_data()
         storage.delete(name)
 
-        File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
+        save_data(storage)
 end
 
 def quote_path(path)
