@@ -69,12 +69,6 @@ def open_bookmark(name)
 end
 
 def main()
-        options = {:create => false}
-
-        bookmark_name = nil
-        bookmark_value = nil
-        bookmark_type = nil
-        create = false
 
         first_arg = ARGV.shift()
 
@@ -82,7 +76,6 @@ def main()
                 create = true
                 bookmark_name = ARGV.shift()
                 bookmark_value = ARGV[0..-1]
-                bookmark_type = 'bookmark'
                 store_bookmark(bookmark_name, bookmark_value)
 
         elsif ['-l', '--list'].include?(first_arg)
