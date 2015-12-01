@@ -73,7 +73,6 @@ def main()
         first_arg = ARGV.shift()
 
         if ['-n', '--new'].include?(first_arg)
-                create = true
                 bookmark_name = ARGV.shift()
                 bookmark_value = ARGV[0..-1]
                 store_bookmark(bookmark_name, bookmark_value)
@@ -83,6 +82,7 @@ def main()
                 storage.each do |key, value|
                         puts key + ": " + value['path'].join(' ')
                 end
+
         else
                 open_bookmark(first_arg)
 
