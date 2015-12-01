@@ -33,6 +33,13 @@ def store_bookmark(name, path)
         File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
 end
 
+def delete_bookmark(name)
+        storage = load_data()
+        storage.delete(name)
+
+        File.open(ENV['HOME']+'/.holdthis', 'w') { |f| YAML.dump(storage, f) }
+end
+
 def quote_path(path)
 
         if (path.include?("'"))
@@ -65,6 +72,8 @@ def open_bookmark(name)
         elsif (File.directory?(path))
                 puts ("Going to " + path)
                 exec('cd ' + quote_path(path))
+        else
+                puts path
         end
 end
 
@@ -82,6 +91,9 @@ def main()
                 storage.each do |key, value|
                         puts key + ": " + value['path'].join(' ')
                 end
+
+        elsif ['-d', '--delete'].include?(first_arg)
+                delete_bookmark(ARGV.shift())
 
         else
                 open_bookmark(first_arg)

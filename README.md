@@ -11,6 +11,7 @@ them again.
     holdthis -l # List the bookmarks holdthis is currently holding
     holdthis -n <name> <path/command> # Create a new bookmark with the given name (overwriting any that already exist)
     holdthis <name> # Open, call, or go to the path/command under <name>
+    holdthis -d <name> # Delete the bookmark with the given name
 
 Some useful usages:
 
