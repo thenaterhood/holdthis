@@ -2,15 +2,15 @@
 
 HoldThis is a simple Ruby script for bookmarking and retrieving
 commands and paths. HoldThis was born out of the fact that I frequently
-paste commands and paths I need to remember for a while into the nearest
-chat window prefaced with "hey hold this for a sec" until I need
+paste commands, paths, and strings I need to remember for a while into
+the nearest chat window prefaced with "hey hold this for a sec" until I need
 them again.
 
 ## Usage
 
     holdthis -l # List the bookmarks holdthis is currently holding
-    holdthis -n <name> <path/command> # Create a new bookmark with the given name (overwriting any that already exist)
-    holdthis <name> # Open, call, or go to the path/command under <name>
+    holdthis -n <name> <path/command/string> # Create a new bookmark with the given name (overwriting any that already exist)
+    holdthis <name> # Open, call, show, or go to the path/command/string under <name>
     holdthis -d <name> # Delete the bookmark with the given name
 
 Some useful usages:
