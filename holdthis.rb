@@ -48,11 +48,17 @@ def open_bookmark(name)
         storage = load_data()
 
         path_array = storage[name]['path']
-
-        executable = find_executable(path_array[0])
         path = path_array.join(' ')
+        executable = find_executable(path_array[0])
 
-        if (executable != nil)
+        if (executable != nil and path_array.length > 1)
+                puts path
+                puts "<enter> to run this, or <ctrl+c> to cancel"
+
+                option = gets.chomp()
+                exec(path)
+
+        elsif (executable != nil)
                 puts path
                 puts "<enter> to run this, e to edit it,  or <ctrl+c> to cancel."
                 option = gets.chomp()
@@ -67,7 +73,7 @@ def open_bookmark(name)
 
         elsif (File.directory?(path))
                 puts ("Going to " + path)
-                exec('cd ' + quote_path(path))
+                exec('xdg-open ' + quote_path(path))
         else
                 puts path
         end
