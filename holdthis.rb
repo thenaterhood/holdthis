@@ -67,13 +67,10 @@ def open_bookmark(name)
                 end
                 exec(path)
 
-        elsif (File.file?(path))
+        elsif (File.file?(path) or File.directory?(path))
                 puts "Opening " + path
                 exec("xdg-open " + quote_path(path))
 
-        elsif (File.directory?(path))
-                puts ("Going to " + path)
-                exec('xdg-open ' + quote_path(path))
         else
                 puts path
         end
