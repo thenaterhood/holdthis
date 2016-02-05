@@ -76,6 +76,21 @@ def open_bookmark(name)
         end
 end
 
+def list_bookmarks()
+
+        storage = load_data()
+
+        longest_key = storage.max_by{|a,b| a.length}.first
+        max_length = longest_key.length
+
+        storage.each do |key, value|
+                length_diff = max_length - key.length
+
+                padding = " " * length_diff
+                puts key + ": " + padding + value['path'].join(' ')
+        end
+end
+
 def main()
 
         first_arg = ARGV.shift()
@@ -86,10 +101,7 @@ def main()
                 store_bookmark(bookmark_name, bookmark_value)
 
         elsif ['-l', '--list'].include?(first_arg)
-                storage = load_data()
-                storage.each do |key, value|
-                        puts key + ": " + value['path'].join(' ')
-                end
+                list_bookmarks()
 
         elsif ['-d', '--delete'].include?(first_arg)
                 delete_bookmark(ARGV.shift())
